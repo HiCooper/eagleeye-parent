@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.berry.eagleeye.auth.dao.mapper.AccessKeyInfoMapper">
+
+    <select id="getUserInfoDTO" resultType="com.berry.eagleeye.auth.module.dto.UserInfoDTO">
+        select a.access_key_id, a.access_key_secret, b.id, b.username
+        from access_key_info a
+                 left join user_info b on b.id = a.user_id
+        where a.access_key_id = #{accessKeyId}
+          and a.state = true;
+    </select>
+
+</mapper>

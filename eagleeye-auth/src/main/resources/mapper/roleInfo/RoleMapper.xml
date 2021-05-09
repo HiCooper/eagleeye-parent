@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.berry.eagleeye.auth.security.dao.mapper.RoleMapper">
+
+    <select id="pageListRolePermission" resultType="com.berry.eagleeye.auth.module.vo.RolePermissionListVo">
+        SELECT a.* , b.name as roleName
+        from sys_permission a
+        LEFT JOIN role_info b on a.role_id = b.id
+        <where>
+            <if test="roleId != null and roleId != ''">
+                AND b.id = #{roleId}
+            </if>
+            <if test="url != null and url != ''">
+                AND a.url REGEXP #{url}
+            </if>
+            <if test="permission != null and permission != ''">
+                AND a.permission REGEXP #{permission}
+            </if>
+        </where>
+    </select>
+
+</mapper>

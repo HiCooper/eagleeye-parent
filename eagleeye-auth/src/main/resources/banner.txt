@@ -1,0 +1,8 @@
+  _-==---_
+ -===  _  -
+-==== ( )  -
+-=====     -    EagleEye (auth)
+-==( )=    -
+ -=====  _-
+   -==---
+${AnsiColor.BRIGHT_BLUE}:: HiCooper 🤓️  :: Running Spring Boot ${spring-boot.version} ::

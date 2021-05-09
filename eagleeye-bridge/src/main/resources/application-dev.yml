@@ -1,0 +1,95 @@
+spring:
+  cloud:
+    consul:
+      discovery:
+        enabled: true
+        health-check-interval: 10s
+        health-check-url: http://127.0.0.1:${server.port}/actuator/health
+        instance-id: ${spring.application.name}:127.0.0.1:${server.port}
+        port: ${server.port}
+        service-name: ${spring.application.name}
+        tags: dev
+      enabled: true
+      host: 127.0.0.1
+      port: 8500
+  datasource:
+    url: jdbc:mysql://47.101.42.169:3306/db_eagleeye_bridge?characterEncoding=utf8&useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true
+    username: berry
+    password: okmnji123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+    druid:
+      async-init: true
+      filters: stat,wall,slf4j
+      initial-size: 5
+      min-idle: 5
+      max-active: 10
+      max-wait: 10000
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      pool-prepared-statements: true
+      min-evictable-idle-time-millis: 300000
+      time-between-eviction-runs-millis: 600000
+
+  data:
+    mongodb:
+      uri: mongodb://root:1qazxsw2@47.101.42.169:27017/eagleeye_bridge?authSource=admin
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+
+  redis:
+    database: 7
+    host: 47.101.42.169
+    port: 16379
+    password: seassoon13579
+
+  rabbitmq:
+    host: 47.101.42.169
+    port: 5672
+    username: root
+    password: okmnji123
+    listener:
+      direct:
+        retry:
+          enabled: true
+          initial-interval: 2s
+      simple:
+        acknowledge-mode: manual
+    publisher-returns: true
+    publisher-confirm-type: correlated
+
+logging:
+  level:
+    root: INFO
+    com.berry.eagleeye: DEBUG
+
+global:
+  # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
+  cors:
+    allowed-origins: '*'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count'
+    allow-credentials: true
+    max-age: 1800
+
+oauth2:
+  signature-verification:
+    public-key-endpoint-uri: http://eagleeye-auth/oauth/token_key
+    #ttl for public keys to verify JWT tokens (in ms)
+    ttl: 3600000
+    #max. rate at which public keys will be fetched (in ms)
+    public-key-refresh-rate-limit: 10000
+  web-client-configuration:
+    #keep in sync with UAA configuration
+    scope: web-app
+    grant_type: client_credentials
+    client-id: internal
+    client-secret: internal
+    access-token-endpoint-uri: http://eagleeye-auth/oauth/token
+

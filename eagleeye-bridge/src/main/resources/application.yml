@@ -1,0 +1,24 @@
+server:
+  port: 8801
+
+spring:
+  application:
+    name: eagleeye-bridge
+  profiles:
+    active: dev
+  task:
+    execution:
+      thread-name-prefix: task-pool-
+      pool:
+        core-size: 4
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: scheduling-
+      pool:
+        size: 2
+
+logging:
+  level:
+    root: INFO
+    com.berry.eagleeye: DEBUG

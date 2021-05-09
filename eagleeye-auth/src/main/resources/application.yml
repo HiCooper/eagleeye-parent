@@ -1,0 +1,47 @@
+server:
+  port: 8033
+  servlet:
+    session:
+      cookie:
+        http-only: true
+
+spring:
+  application:
+    name: eagleeye-auth
+  profiles:
+    active: dev
+  jackson:
+    # 输出时间为 时间戳
+    #    serialization:
+    #      write-dates-as-timestamps: true
+    # 输出为指定格式字符串
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  task:
+    execution:
+      thread-name-prefix: auth-task-
+      pool:
+        core-size: 4
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: user-scheduling-
+      pool:
+        size: 2
+  thymeleaf:
+    cache: false
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.berry.eagleeye.auth.security.dao.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
