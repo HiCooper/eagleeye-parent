@@ -41,7 +41,7 @@ public class BridgeService {
     }
 
     /**
-     * 提交审批
+     * 提交任务处理
      *
      * @param request 请求参数对象
      * @return 提交是否成功
@@ -94,10 +94,10 @@ public class BridgeService {
     }
 
     /**
-     * 获取审批结果
+     * 获取任务处理结果
      *
      * @param recordId 记录ID
-     * @return 审批结果信息
+     * @return 任务处理结果信息
      */
     public ApprovalResultDto getResult(Long recordId) throws HttpException {
         assert recordId != null : "params must not be null";

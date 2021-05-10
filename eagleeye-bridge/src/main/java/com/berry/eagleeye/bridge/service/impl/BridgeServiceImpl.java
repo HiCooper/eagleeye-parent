@@ -7,12 +7,10 @@ import com.berry.eagleeye.bridge.common.exceptions.BaseException;
 import com.berry.eagleeye.bridge.common.utils.NetworkUtils;
 import com.berry.eagleeye.bridge.dao.entity.RecordDetail;
 import com.berry.eagleeye.bridge.dao.service.IRecordDetailDaoService;
+import com.berry.eagleeye.bridge.module.mo.SubmitRequest;
 import com.berry.eagleeye.bridge.mongo.MongoService;
 import com.berry.eagleeye.bridge.retry.RetryService;
 import com.berry.eagleeye.bridge.service.IBridgeService;
-import com.berry.eagleeye.module.ApprovalResultDto;
-import com.berry.eagleeye.module.RecordStatusVo;
-import com.berry.eagleeye.module.SubmitApprovalRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +49,7 @@ public class BridgeServiceImpl implements IBridgeService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String submitApproval(SubmitApprovalRequest request, HttpServletRequest httpServletRequest) {
+    public String submitApproval(SubmitRequest request, HttpServletRequest httpServletRequest) {
         String routerKey = isBlank(request.getRoutingKeySuffix()) ? DEFAULT_ROUTING_KEY_SUFFIX : request.getRoutingKeySuffix();
         // 1. 查询记录是否提交
         int count = recordDetailDaoService.count(new QueryWrapper<RecordDetail>().eq("request_record_id", request.getRecordId()));
@@ -65,11 +63,8 @@ public class BridgeServiceImpl implements IBridgeService {
         // 创建记录
         RecordDetail recordDetail = new RecordDetail();
         recordDetail.setRequestRecordId(request.getRecordId());
-        recordDetail.setCalcMode(request.getCalcMode());
         recordDetail.setProcessStatus(EnumConstant.ExecuteState.received.name());
-        recordDetail.setProjectId(request.getProjectId());
         recordDetail.setRequestVersion(request.getVersion());
-        recordDetail.setSid(request.getSid());
         recordDetail.setRoutingKey(routerKey);
         recordDetail.setCreateTime(new Date());
         recordDetailDaoService.save(recordDetail);
@@ -79,37 +74,6 @@ public class BridgeServiceImpl implements IBridgeService {
         String msg = JSON.toJSONString(request);
         retryService.sendMsgToAlgo(recordDetailId, msg, routerKey);
         return recordDetailId;
-    }
-
-    @Override
-    public RecordStatusVo getStatus(Long submitId) {
-        // 查询 记录状态表
-        RecordDetail recordDetail = getRecordDetail(submitId);
-        if (recordDetail == null) {
-            throw new BaseException("404", "");
-        }
-        RecordStatusVo vo = new RecordStatusVo();
-        String status = recordDetail.getProcessStatus();
-        vo.setSubmitId(submitId);
-        vo.setStatus(status);
-        vo.setRecordId(recordDetail.getRequestRecordId());
-        vo.setStatusDesc(EnumConstant.ExecuteState.getDescByName(status));
-        return vo;
-    }
-
-    @Override
-    public ApprovalResultDto getResult(Long submitId) {
-        RecordStatusVo status = getStatus(submitId);
-        // 如果状态是：finished(已完成),查询 mongoDB
-        if (!EnumConstant.ExecuteState.finished.name().equals(status.getStatus())) {
-            throw new BaseException("404", status.getStatusDesc());
-        }
-        ApprovalResultDto result = mongoService.getResult(String.valueOf(submitId));
-        if (result == null) {
-            logger.error("异常：记录：{} 状态： {} 。 未找到审批结果", submitId, status.getStatusDesc());
-            throw new BaseException("404", "未找到审批结果");
-        }
-        return result;
     }
 
     @Override

@@ -2,10 +2,8 @@ package com.berry.eagleeye.bridge.api;
 
 import com.berry.eagleeye.bridge.common.Result;
 import com.berry.eagleeye.bridge.common.ResultFactory;
+import com.berry.eagleeye.bridge.module.mo.SubmitRequest;
 import com.berry.eagleeye.bridge.service.IBridgeService;
-import com.berry.eagleeye.module.ApprovalResultDto;
-import com.berry.eagleeye.module.RecordStatusVo;
-import com.berry.eagleeye.module.SubmitApprovalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,44 +30,42 @@ public class BridgeApi {
     private IBridgeService bridgeService;
 
     /**
-     * 提交审批
+     * 提交任务处理
      *
      * @param request            请求体
      * @param httpServletRequest request
      * @return submitId
      */
     @PostMapping("/submit_approval")
-    public Result<String> submitApproval(@Validated @RequestBody SubmitApprovalRequest request, HttpServletRequest httpServletRequest) {
+    public Result<String> submitApproval(@Validated @RequestBody SubmitRequest request, HttpServletRequest httpServletRequest) {
         String submitId = bridgeService.submitApproval(request, httpServletRequest);
         return ResultFactory.wrapper(submitId);
     }
 
     /**
-     * 查询审批状态
+     * 查询任务处理状态
      *
-     * @param submitId 提交预审
+     * @param submitId 提交任务处理
      * @return RecordStatusVo
      */
     @GetMapping("/get_status")
-    public Result<RecordStatusVo> getStatus(@Validated @RequestParam("submitId") Long submitId) {
-        RecordStatusVo status = bridgeService.getStatus(submitId);
-        return ResultFactory.wrapper(status);
+    public Result getStatus(@Validated @RequestParam("submitId") Long submitId) {
+        return ResultFactory.wrapper();
     }
 
     /**
-     * 查询审批结果
+     * 查询任务处理结果
      *
      * @param submitId 提交ID
      * @return ApprovalResultDto
      */
     @GetMapping("/get_result")
-    public Result<ApprovalResultDto> getResult(@Validated @RequestParam("submitId") Long submitId) {
-        ApprovalResultDto result = bridgeService.getResult(submitId);
-        return ResultFactory.wrapper(result);
+    public Result getResult(@Validated @RequestParam("submitId") Long submitId) {
+        return ResultFactory.wrapper();
     }
 
     /**
-     * 终止审批
+     * 终止任务处理
      *
      * @param submitId 提交ID
      * @return ApprovalResultDto

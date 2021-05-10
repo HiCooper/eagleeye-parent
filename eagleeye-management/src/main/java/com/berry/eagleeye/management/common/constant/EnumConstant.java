@@ -11,7 +11,7 @@ public final class EnumConstant {
     public enum ApprovalResult {
 
         /**
-         * 审批结果
+         * 任务处理结果
          */
         Fuzzy("F"),
         Wrong("W"),
@@ -39,7 +39,7 @@ public final class EnumConstant {
 
     public enum ExecuteState {
         /**
-         * 审批结果
+         * 任务处理结果
          */
         received("已受理"),
         processing("处理中"),

@@ -50,21 +50,6 @@ public class RecordDetail implements Serializable {
     private String requestVersion;
 
     /**
-     * 事项编码
-     */
-    private String sid;
-
-    /**
-     * 调用模式
-     */
-    private String calcMode;
-
-    /**
-     * 项目ID
-     */
-    private String projectId;
-
-    /**
      * 消息路由
      */
     private String routingKey;

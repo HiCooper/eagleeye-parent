@@ -8,7 +8,7 @@ import com.berry.eagleeye.bridge.dao.entity.AppConfigInfo;
 import com.berry.eagleeye.bridge.dao.entity.RecordDetail;
 import com.berry.eagleeye.bridge.dao.service.IAppConfigInfoDaoService;
 import com.berry.eagleeye.bridge.dao.service.IRecordDetailDaoService;
-import com.berry.eagleeye.bridge.mq.AlgMsgRecvHandler;
+import com.berry.eagleeye.bridge.mq.ExecutorMsgRecvHandler;
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -51,7 +51,7 @@ public class CallBackNoticeJob implements Job {
     private IAppConfigInfoDaoService appConfigInfoDaoService;
 
     @Resource
-    private AlgMsgRecvHandler algMsgRecvHandler;
+    private ExecutorMsgRecvHandler executorMsgRecvHandler;
 
     @Resource
     private RestTemplate restTemplate;
@@ -68,7 +68,7 @@ public class CallBackNoticeJob implements Job {
         }
         // 状态检查
         if (EnumConstant.ExecuteState.userCancel.name().equals(recordDetail.getProcessStatus())) {
-            logger.warn("该记录：【{}】 用户已取消预审，忽略该Fail消息", recordDetail.getRequestRecordId());
+            logger.warn("该记录：【{}】 用户已取消任务处理，忽略该Fail消息", recordDetail.getRequestRecordId());
             return;
         }
 
@@ -95,7 +95,7 @@ public class CallBackNoticeJob implements Job {
         }
 
         // 通知失败: 再次尝试触发下一次通知
-        algMsgRecvHandler.triggerCallBackNotice(recordDetail);
+        executorMsgRecvHandler.triggerCallBackNotice(recordDetail);
         Integer noticeTimes = recordDetail.getNoticeTimes();
         logger.info("本次：{}/{} 通知失败，message: {}, 稍后尝试第: {}/{} 次通知", noticeTimes, maxNoticeTimes, "", noticeTimes + 1, maxNoticeTimes);
     }

@@ -12,7 +12,6 @@
         <module>eagleeye-auth</module>
         <module>eagleeye-bridge</module>
         <module>eagleeye-bridge-sdk</module>
-        <module>eagleeye-common</module>
         <module>eagleeye-management</module>
     </modules>
 

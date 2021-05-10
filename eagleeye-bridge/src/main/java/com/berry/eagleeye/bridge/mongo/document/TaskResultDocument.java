@@ -16,11 +16,11 @@ import java.util.Date;
  * Use：
  */
 @Data
-@Document("approval_result")
-public class ApprovalResultDocument {
+@Document("task_result")
+public class TaskResultDocument {
 
     /**
-     * 审批记录主键 作为 文档主键
+     * 记录ID 作为 文档主键
      */
     @Id
     private String recordId;
@@ -31,7 +31,7 @@ public class ApprovalResultDocument {
     private Date createTime;
 
     /**
-     * 审批结果
+     * 处理结果
      */
-    private Object approvalResult;
+    private Object taskResult;
 }

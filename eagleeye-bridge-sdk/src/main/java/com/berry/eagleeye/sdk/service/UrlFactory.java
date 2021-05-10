@@ -15,9 +15,9 @@ public class UrlFactory {
         /**
          * url
          */
-        submit_approval("/api/bridge/v1/submit_approval", "提交预审", "POST"),
-        get_status("/api/bridge/v1/get_status?recordId=%s", "查询审批状态", "GET"),
-        get_result("/api/bridge/v1/get_result?recordId=%s", "获取审批结果", "GET");
+        submit_approval("/api/bridge/v1/submit_approval", "提交任务处理", "POST"),
+        get_status("/api/bridge/v1/get_status?recordId=%s", "查询任务处理状态", "GET"),
+        get_result("/api/bridge/v1/get_result?recordId=%s", "获取任务处理结果", "GET");
 
         private String url;
         private String desc;

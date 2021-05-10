@@ -1,12 +1,11 @@
 package com.berry.eagleeye.bridge.mongo;
 
-import com.alibaba.fastjson.JSON;
-import com.berry.eagleeye.bridge.mongo.document.ApprovalResultDocument;
+import com.berry.eagleeye.bridge.module.dto.FailResultDto;
+import com.berry.eagleeye.bridge.module.dto.TaskMessageDTO;
+import com.berry.eagleeye.bridge.module.mo.SubmitRequest;
 import com.berry.eagleeye.bridge.mongo.document.RequestDocument;
+import com.berry.eagleeye.bridge.mongo.document.TaskResultDocument;
 import com.berry.eagleeye.bridge.mongo.dto.FormatErrorMessageDocument;
-import com.berry.eagleeye.module.ApprovalResultDto;
-import com.berry.eagleeye.module.FailResultDto;
-import com.berry.eagleeye.module.SubmitApprovalRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,11 +31,11 @@ public class MongoService {
 
     /**
      * 保存请求参数
-     * @param request request params
-     * @param username username
+     *
+     * @param request  request params
      * @param sourceIp ip
      */
-    public void saveRequestParams(SubmitApprovalRequest request, String sourceIp) {
+    public void saveRequestParams(SubmitRequest request, String sourceIp) {
         RequestDocument requestDocument = new RequestDocument();
         requestDocument.setCreateTime(new Date());
         requestDocument.setRecordId(request.getRecordId());
@@ -46,20 +45,21 @@ public class MongoService {
     }
 
     /**
-     * 保存预审结果
+     * 保存任务处理结果
      *
-     * @param approvalResultDto approvalResult
+     * @param TaskMessageDTO taskMessageDTO
      */
-    public void saveApprovalResult(ApprovalResultDto approvalResultDto) {
-        ApprovalResultDocument approvalResultDocument = new ApprovalResultDocument();
-        approvalResultDocument.setRecordId(approvalResultDto.getRecordId());
-        approvalResultDocument.setCreateTime(new Date());
-        approvalResultDocument.setApprovalResult(approvalResultDto);
-        mongoTemplate.save(approvalResultDocument);
+    public void saveApprovalResult(TaskMessageDTO taskMessageDTO) {
+        TaskResultDocument taskResultDocument = new TaskResultDocument();
+        taskResultDocument.setRecordId(taskMessageDTO.getRecordId());
+        taskResultDocument.setCreateTime(new Date());
+        taskResultDocument.setTaskResult(taskMessageDTO);
+        mongoTemplate.save(taskResultDocument);
     }
 
     /**
      * 保存格式解析异常消息
+     *
      * @param message msg
      */
     public void saveFormatErrorMsg(String message, String type) {
@@ -68,18 +68,18 @@ public class MongoService {
     }
 
     /**
-     * 查询预审结果
+     * 查询任务处理结果
      *
      * @param recordId recordId
      * @return approvalResultDto
      */
-    public ApprovalResultDto getResult(String recordId) {
+    public Object getResult(String recordId) {
         Query query = new Query(Criteria.where("recordId").is(recordId));
-        ApprovalResultDocument document = mongoTemplate.findOne(query, ApprovalResultDocument.class);
-        if (document == null || document.getApprovalResult() == null) {
+        TaskResultDocument document = mongoTemplate.findOne(query, TaskResultDocument.class);
+        if (document == null || document.getTaskResult() == null) {
             return null;
         }
-        return JSON.parseObject(JSON.toJSONString(document.getApprovalResult()), ApprovalResultDto.class);
+        return document.getTaskResult();
     }
 
     public void saveApprovalFailResult(FailResultDto failResultDto) {

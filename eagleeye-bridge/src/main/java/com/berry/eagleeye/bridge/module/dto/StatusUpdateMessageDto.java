@@ -1,4 +1,4 @@
-package com.berry.eagleeye.module;
+package com.berry.eagleeye.bridge.module.dto;
 
 import lombok.Data;
 

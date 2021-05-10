@@ -20,7 +20,7 @@ import java.util.Date;
 public class RequestDocument {
 
     /**
-     * 审批记录主键 作为 文档主键
+     * 任务处理记录主键 作为 文档主键
      */
     @Id
     private String recordId;
