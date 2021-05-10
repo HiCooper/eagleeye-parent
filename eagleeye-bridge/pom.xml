@@ -20,12 +20,6 @@
     </properties>
 
     <dependencies>
-        <!--        local module -->
-        <dependency>
-            <groupId>com.berry</groupId>
-            <artifactId>eagleeye-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
         <!--   swagger2    -->
         <dependency>

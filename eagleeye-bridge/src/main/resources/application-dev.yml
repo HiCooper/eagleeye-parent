@@ -45,8 +45,8 @@ spring:
   redis:
     database: 7
     host: 47.101.42.169
-    port: 16379
-    password: seassoon13579
+    port: 6379
+    password: okmnji123
 
   rabbitmq:
     host: 47.101.42.169

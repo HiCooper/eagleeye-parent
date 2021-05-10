@@ -1,14 +1,13 @@
 package com.berry.eagleeye.sdk.service;
 
 import com.alibaba.fastjson.JSON;
-import com.berry.eagleeye.module.ApprovalResultDto;
-import com.berry.eagleeye.module.RecordStatusVo;
-import com.berry.eagleeye.module.SubmitApprovalRequest;
 import com.berry.eagleeye.sdk.common.BridgeException;
 import com.berry.eagleeye.sdk.common.Constants;
 import com.berry.eagleeye.sdk.http.HttpClient;
 import com.berry.eagleeye.sdk.http.HttpException;
 import com.berry.eagleeye.sdk.http.Response;
+import com.berry.eagleeye.sdk.service.module.dto.SuccessResultDTO;
+import com.berry.eagleeye.sdk.service.module.mo.SubmitRequest;
 import com.berry.eagleeye.sdk.utils.Auth;
 import com.berry.eagleeye.sdk.utils.Json;
 import com.berry.eagleeye.sdk.utils.StringMap;
@@ -46,7 +45,7 @@ public class BridgeService {
      * @param request 请求参数对象
      * @return 提交是否成功
      */
-    public Boolean submitApproval(SubmitApprovalRequest request) throws HttpException {
+    public Boolean submitApproval(SubmitRequest request) throws HttpException {
         assert request != null : "params must not be null";
         String url = String.format("%s%s", config.getAddress(), UrlFactory.BridgeUrl.submit_approval.getUrl());
         StringMap header = auth.authorization(url);
@@ -65,41 +64,12 @@ public class BridgeService {
     }
 
     /**
-     * 查询 记录当前 状态
-     *
-     * @param recordId 记录ID
-     * @return 记录状态信息
-     */
-    public RecordStatusVo getStatus(Long recordId) throws HttpException {
-        assert recordId != null : "params must not be null";
-        String url = String.format(config.getAddress() + UrlFactory.BridgeUrl.get_status.getUrl(), recordId);
-        Response response = getResponse(url);
-        Result result = null;
-        if (response.isSuccessful()) {
-            result = response.jsonToObject(Result.class);
-            if (result != null
-                    && result.getCode().equals(Constants.API_SUCCESS_CODE)
-                    && result.getMsg().equals(Constants.API_SUCCESS_MSG)
-                    && result.getData() != null) {
-                return JSON.parseObject(JSON.toJSONString(result.getData()), RecordStatusVo.class);
-            }
-        }
-        if (result == null) {
-            String msg = "empty response";
-            logger.error("{}. params: {}", msg, recordId);
-            throw new BridgeException(msg);
-        }
-        logger.error(errorIMsgTemp, result.getCode(), result.getMsg());
-        throw new BridgeException(result.getMsg());
-    }
-
-    /**
      * 获取任务处理结果
      *
      * @param recordId 记录ID
      * @return 任务处理结果信息
      */
-    public ApprovalResultDto getResult(Long recordId) throws HttpException {
+    public SuccessResultDTO getResult(Long recordId) throws HttpException {
         assert recordId != null : "params must not be null";
         String url = String.format(config.getAddress() + UrlFactory.BridgeUrl.get_result.getUrl(), recordId);
         Response response = getResponse(url);
@@ -110,7 +80,7 @@ public class BridgeService {
                     && result.getCode().equals(Constants.API_SUCCESS_CODE)
                     && result.getMsg().equals(Constants.API_SUCCESS_MSG)
                     && result.getData() != null) {
-                return JSON.parseObject(JSON.toJSONString(result.getData()), ApprovalResultDto.class);
+                return JSON.parseObject(JSON.toJSONString(result.getData()), SuccessResultDTO.class);
             }
         }
         if (result == null) {
